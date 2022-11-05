@@ -16,7 +16,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch_size", type=int, default=2, help="Batch size")
     parser.add_argument("--num_epochs", type=int, default=25, help="Number of epochs")
     parser.add_argument("--save_interval", type=int, default=1000, help="Interval of saving model")
-    parser.add_argument("--slice_image", action="store_true", type="Whether slice the training image or not")
+    parser.add_argument("--slice_image", action="store_true", help="Whether slice the training image or not")
     args = parser.parse_args()
 
     trainer = Trainer(
