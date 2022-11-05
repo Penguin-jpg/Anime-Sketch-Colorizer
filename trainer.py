@@ -108,7 +108,7 @@ class Trainer:
             "optimizer_D": self.optimizer_D.state_dict(),
         }
         if not os.path.isdir("checkpoint"):
-            os.mkdir("checkpoint")
+            os.makedirs("./checkpoint/edge2color")
         torch.save(state, "./checkpoint/edge2color/ckpt.pth")
         print(f"Epoch {current_epoch} saved!")
 
