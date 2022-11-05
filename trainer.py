@@ -37,6 +37,7 @@ class Trainer:
         batch_size=2,
         num_epochs=25,
         save_interval=1000,
+        save_path="./checkpoint/edge2color",
         lr=2e-4,
         lambda1=100,
         lambda2=1e-4,
@@ -74,6 +75,7 @@ class Trainer:
         self.batch_size = batch_size
         self.num_epochs = num_epochs
         self.save_interval = save_interval
+        self.save_path = save_path
         self.lr = lr
         self.lambda1 = lambda1
         self.lambda2 = lambda2
@@ -107,9 +109,9 @@ class Trainer:
             "optimizer_G": self.optimizer_G.state_dict(),
             "optimizer_D": self.optimizer_D.state_dict(),
         }
-        if not os.path.isdir("checkpoint"):
-            os.makedirs("./checkpoint/edge2color")
-        torch.save(state, "./checkpoint/edge2color/ckpt.pth")
+        if not os.path.exists(self.save_path):
+            os.makedirs(self.save_path)
+        torch.save(state, os.path.join(self.save_path, "ckpt.pth"))
         print(f"Epoch {current_epoch} saved!")
 
     def train(self):
