@@ -9,7 +9,7 @@ warnings.simplefilter("ignore", UserWarning)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_path", type=str, help="Path of color images")
+    parser.add_argument("--data_path", type=str, help="Folder path of color images")
     parser.add_argument(
         "--num_clusters", type=int, default=9, help="Cluster of K-means to find color palette"
     )

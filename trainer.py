@@ -4,6 +4,7 @@ import torchvision
 import opencv_transforms.transforms as TF
 
 import models
+import utils
 import dataloader
 import time
 import os
@@ -93,6 +94,7 @@ class Trainer:
         self.netEx = torchvision.models.vgg16(True).features[0:4].to(self.device)
         torch.backends.cudnn.benchmark = True
 
+        utils.make_dir(save_path)
         num_params = sum(p.numel() for p in self.netG.parameters() if p.requires_grad) + sum(
             p.numel() for p in self.netD.parameters() if p.requires_grad
         )
@@ -109,8 +111,6 @@ class Trainer:
             "optimizer_G": self.optimizer_G.state_dict(),
             "optimizer_D": self.optimizer_D.state_dict(),
         }
-        if not os.path.exists(self.save_path):
-            os.makedirs(self.save_path)
         torch.save(state, os.path.join(self.save_path, "ckpt.pth"))
         print(f"Epoch {current_epoch} saved!")
 
@@ -136,10 +136,10 @@ class Trainer:
             for i, data in enumerate(self.train_loader, 0):
 
                 # Set model input
-                edge = data[0].to(self.device)
+                edge = data[0]
                 color = data[1].to(self.device)
                 color_list = data[2]
-                input_tensor = torch.cat([edge.cpu()] + color_list, dim=1).to(self.device)
+                input_tensor = torch.cat([edge] + color_list, dim=1).to(self.device)
                 b_size = edge.size(0)
 
                 # Real & Fake Lebel

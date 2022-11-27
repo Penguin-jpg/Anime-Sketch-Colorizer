@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import os
 
 
 def color_cluster(img, nclusters=9):
@@ -52,3 +53,10 @@ def color_to_hex(color):
     # only need one rgb representation
     color = color[0][0]
     return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}".upper()
+
+
+def make_dir(image_path):
+    if not os.path.exsits(image_path):
+        os.makedirs(image_path)
+    else:
+        print(f"{image_path} already exists")

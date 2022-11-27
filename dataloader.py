@@ -3,7 +3,7 @@ import torch
 import opencv_transforms.functional as FF
 from torchvision import datasets
 
-from utils import color_cluster
+import utils
 
 
 class PairImageFolder(datasets.ImageFolder):
@@ -58,7 +58,7 @@ class PairImageFolder(datasets.ImageFolder):
         if self.slice_image:
             img = img[:, 0:512, :]
         img = self.transform(img)
-        color_palette = color_cluster(img, nclusters=self.ncluster)
+        color_palette = utils.color_cluster(img, nclusters=self.ncluster)
         img = self.make_tensor(img)
 
         with torch.no_grad():
@@ -126,7 +126,7 @@ class GetImageFolder(datasets.ImageFolder):
         img = self.loader(path)
         img = np.asarray(img)
         img = self.transform(img)
-        color_palette = color_cluster(img, nclusters=self.ncluster)
+        color_palette = utils.color_cluster(img, nclusters=self.ncluster)
         img = self.make_tensor(img)
 
         with torch.no_grad():
