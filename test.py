@@ -21,6 +21,10 @@ def make_tensor(img):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument("--color_model_path", type=str, help="Checkpoint path of trained Sketch2Color model")
+    parser.add_argument(
+        "--sketch_model_path", type=str, hhelp="Checkpoint path of trained Color2Sketch model"
+    )
     parser.add_argument("--data_path", type=str, help="Folder path of (un)colored image")
     parser.add_argument("--reference_path", type=str, help="Folder path of reference image")
     parser.add_argument(
@@ -33,11 +37,11 @@ if __name__ == "__main__":
     utils.make_dir(args.save_path)
 
     with torch.no_grad():
-        netC2S = models.Color2Sketch(pretrained=True).to(device)
+        netC2S = models.Color2Sketch(pretrained=True, checkpoint_path=args.sketch_model_path).to(device)
         netC2S.eval()
 
     channels = 3 * (args.num_clusters + 1)
-    netG = models.Sketch2Color(nc=channels).to(device)
+    netG = models.Sketch2Color(nc=channels, pretrained=True, checkpoint_path=args.color_model_path).to(device)
     netD = models.Discriminator(nc=channels + 3).to(device)
     netG.eval()
     netD.eval()

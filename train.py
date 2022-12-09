@@ -17,7 +17,13 @@ if __name__ == "__main__":
     parser.add_argument("--num_epochs", type=int, default=25, help="Number of epochs")
     parser.add_argument("--save_interval", type=int, default=1000, help="Interval of saving model")
     parser.add_argument(
-        "--save_path", type=str, default="./checkpoint/edge2color", help="Path to save checkpoint"
+        "--save_path",
+        type=str,
+        default="./checkpoint/sketch2color/sketch2color.pth",
+        help="Path to save checkpoint",
+    )
+    parser.add_argument(
+        "--sketch_model_path", type=str, hhelp="Checkpoint path of trained Color2Sketch model"
     )
     parser.add_argument("--slice_image", action="store_true", help="Whether slice the training image or not")
     args = parser.parse_args()
@@ -30,6 +36,7 @@ if __name__ == "__main__":
         args.num_epochs,
         args.save_interval,
         args.save_path,
+        args.sketch_model_path,
     )
 
     trainer.train()

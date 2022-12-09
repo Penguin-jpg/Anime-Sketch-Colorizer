@@ -102,7 +102,7 @@ class Attention_block(nn.Module):
 
 
 class Color2Sketch(nn.Module):
-    def __init__(self, nc=3, pretrained=False):
+    def __init__(self, nc=3, pretrained=False, checkpoint_path=None):
         super(Color2Sketch, self).__init__()
 
         class Encoder(nn.Module):
@@ -223,14 +223,14 @@ class Color2Sketch(nn.Module):
         self.encoder = Encoder()
         self.decoder = Decoder()
         if pretrained:
-            print("Loading pretrained {0} model...".format("Color2Sketch"), end=" ")
-            assert os.path.isdir("checkpoint"), "Error: no checkpoint directory found!"
-            checkpoint = torch.load("./checkpoint/color2edge/ckpt.pth")
+            print("Loading pretrained Color2Sketch model...", end=" ")
+            assert os.path.isfile(checkpoint_path), "Error: no checkpoint file found!"
+            checkpoint = torch.load(checkpoint_path, map_location="cpu")
             self.load_state_dict(checkpoint["netG"], strict=True)
             print("Done!")
         else:
             self.apply(weights_init)
-            print("Weights of {0} model are initialized".format("Color2Sketch"))
+            print("Weights of Color2Sketch model are initialized")
 
     def forward(self, inputs):
         encode = self.encoder(inputs)
@@ -240,7 +240,7 @@ class Color2Sketch(nn.Module):
 
 
 class Sketch2Color(nn.Module):
-    def __init__(self, nc=3, pretrained=False):
+    def __init__(self, nc=3, pretrained=False, checkpoint_path=None):
         super(Sketch2Color, self).__init__()
 
         class Encoder(nn.Module):
@@ -361,14 +361,14 @@ class Sketch2Color(nn.Module):
         self.encoder = Encoder()
         self.decoder = Decoder()
         if pretrained:
-            print("Loading pretrained {0} model...".format("Sketch2Color"), end=" ")
-            assert os.path.isdir("checkpoint"), "Error: no checkpoint directory found!"
-            checkpoint = torch.load("./checkpoint/edge2color/ckpt.pth")
+            print("Loading pretrained Sketch2Color model...", end=" ")
+            assert os.path.isfile(checkpoint_path), "Error: no checkpoint file found!"
+            checkpoint = torch.load(checkpoint_path, map_location="cpu")
             self.load_state_dict(checkpoint["netG"], strict=True)
             print("Done!")
         else:
             self.apply(weights_init)
-            print("Weights of {0} model are initialized".format("Sketch2Color"))
+            print("Weights of Sketch2Color model are initialized")
 
     def forward(self, inputs):
         encode = self.encoder(inputs)
@@ -396,7 +396,7 @@ class Discriminator(nn.Module):
             pass
         else:
             self.apply(weights_init)
-            print("Weights of {0} model are initialized".format("Discriminator"))
+            print("Weights of Discriminator model are initialized")
 
     def forward(self, base, unknown):
         input = torch.cat((base, unknown), dim=1)

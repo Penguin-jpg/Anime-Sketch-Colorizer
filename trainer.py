@@ -38,7 +38,8 @@ class Trainer:
         batch_size=2,
         num_epochs=25,
         save_interval=1000,
-        save_path="./checkpoint/edge2color",
+        save_path="./checkpoint/sketch2color/sketch2color.pth",
+        sketch_model_path="./ckeckpoint/color2sketch/color2sketch.pth",
         lr=2e-4,
         lambda1=100,
         lambda2=1e-4,
@@ -56,7 +57,9 @@ class Trainer:
             ]
         )
         with torch.no_grad():
-            self.netC2S = models.Color2Sketch(pretrained=True).to(self.device)
+            self.netC2S = models.Color2Sketch(pretrained=True, checkpoint_path=sketch_model_path).to(
+                self.device
+            )
             self.netC2S.eval()
 
         self.train_imagefolder = dataloader.PairImageFolder(
@@ -111,7 +114,7 @@ class Trainer:
             "optimizer_G": self.optimizer_G.state_dict(),
             "optimizer_D": self.optimizer_D.state_dict(),
         }
-        torch.save(state, os.path.join(self.save_path, "ckpt.pth"))
+        torch.save(state, self.save_path)
         print(f"Epoch {current_epoch} saved!")
 
     def train(self):
@@ -132,7 +135,7 @@ class Trainer:
             start_time = time.time()
             total_time = 0
 
-            print("Epoch [{0}/{1}]".format(epoch, last_epoch))
+            print(f"Epoch [{epoch}/{last_epoch}]")
             for i, data in enumerate(self.train_loader, 0):
 
                 # Set model input
