@@ -14,12 +14,6 @@ import warnings
 warnings.simplefilter("ignore", UserWarning)
 
 
-def make_tensor(img):
-    img = TF.to_tensor(img)
-    img = TF.normalize(img, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-    return img
-
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--color_model_path", type=str, help="Checkpoint path of trained Sketch2Color model")
@@ -33,8 +27,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    utils.make_dir(args.data_path)
-    utils.make_dir(args.reference_path)
+    utils.make_dir(os.path.join(args.data_path, os.path.basename(args.data_path)))
+    utils.make_dir(os.path.join(args.reference_path, os.path.basename(args.reference_path)))
     utils.make_dir(args.result_path)
 
     with torch.no_grad():
@@ -68,6 +62,7 @@ if __name__ == "__main__":
         fake = netG(input_tensor)
         result = torch.cat([reference, edge, fake], dim=-1).cpu()
         output = vutils.make_grid(result, nrow=1, padding=5, normalize=True).cpu().permute(1, 2, 0).numpy()
-        plt.imsave(arr=output, fname=os.path.join(args.save_path, "compare.png"))
+        plt.imsave(arr=output, fname=os.path.join(args.result_path, "compare.png"))
         image = utils.tensor_to_pillow_image(fake.squeeze(0))
         image.save(os.path.join(args.result_path, "result.png"))
+    print("Colorization Done!")

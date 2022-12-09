@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import os
-import opencv_transforms.transforms as OTF
+import opencv_transforms.functional as FF
 import torchvision.transforms.functional as TF
 
 
@@ -41,10 +41,10 @@ def color_cluster(img, nclusters=9):
     return color_palette
 
 
-def make_tensor(img):
-    img = OTF.to_tensor(img)
-    img = OTF.normalize(img, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-    return img
+def make_tensor(image):
+    image = FF.to_tensor(image)
+    image = FF.normalize(image, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+    return image
 
 
 def color_to_hex(color):
@@ -63,11 +63,11 @@ def color_to_hex(color):
     return f"#{color[0]:02x}{color[1]:02x}{color[2]:02x}".upper()
 
 
-def make_dir(image_path):
-    if not os.path.exists(image_path):
-        os.makedirs(image_path)
+def make_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
     else:
-        print(f"{image_path} already exists")
+        print(f"{path} already exists")
 
 
 def tensor_to_pillow_image(tensor):
