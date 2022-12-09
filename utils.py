@@ -56,7 +56,7 @@ def color_to_hex(color):
 
 
 def make_dir(image_path):
-    if not os.path.exsits(image_path):
+    if not os.path.exists(image_path):
         os.makedirs(image_path)
     else:
         print(f"{image_path} already exists")
