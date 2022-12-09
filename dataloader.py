@@ -59,7 +59,7 @@ class PairImageFolder(datasets.ImageFolder):
             img = img[:, 0:512, :]
         img = self.transform(img)
         color_palette = utils.color_cluster(img, nclusters=self.ncluster)
-        img = self.make_tensor(img)
+        img = utils.make_tensor(img)
 
         with torch.no_grad():
             img_edge = (
@@ -70,14 +70,9 @@ class PairImageFolder(datasets.ImageFolder):
 
         for i in range(0, len(color_palette)):
             color = color_palette[i]
-            color_palette[i] = self.make_tensor(color)
+            color_palette[i] = utils.make_tensor(color)
 
         return img_edge, img, color_palette
-
-    def make_tensor(self, img):
-        img = FF.to_tensor(img)
-        img = FF.normalize(img, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-        return img
 
 
 class GetImageFolder(datasets.ImageFolder):
@@ -127,7 +122,7 @@ class GetImageFolder(datasets.ImageFolder):
         img = np.asarray(img)
         img = self.transform(img)
         color_palette = utils.color_cluster(img, nclusters=self.ncluster)
-        img = self.make_tensor(img)
+        img = utils.make_tensor(img)
 
         with torch.no_grad():
             img_edge = (
@@ -138,11 +133,6 @@ class GetImageFolder(datasets.ImageFolder):
 
         for i in range(0, len(color_palette)):
             color = color_palette[i]
-            color_palette[i] = self.make_tensor(color)
+            color_palette[i] = utils.make_tensor(color)
 
         return img_edge, img, color_palette
-
-    def make_tensor(self, img):
-        img = FF.to_tensor(img)
-        img = FF.normalize(img, (0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
-        return img

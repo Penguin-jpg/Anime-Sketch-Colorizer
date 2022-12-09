@@ -4,8 +4,9 @@ import models
 import utils
 import opencv_transforms.transforms as TF
 import dataloader
-from PIL import Image
 import os
+import torchvision.utils as vutils
+import matplotlib.pyplot as plt
 
 # To ignore warning
 import warnings
@@ -22,9 +23,7 @@ def make_tensor(img):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--color_model_path", type=str, help="Checkpoint path of trained Sketch2Color model")
-    parser.add_argument(
-        "--sketch_model_path", type=str, hhelp="Checkpoint path of trained Color2Sketch model"
-    )
+    parser.add_argument("--sketch_model_path", type=str, help="Checkpoint path of trained Color2Sketch model")
     parser.add_argument("--data_path", type=str, help="Folder path of (un)colored image")
     parser.add_argument("--reference_path", type=str, help="Folder path of reference image")
     parser.add_argument(
@@ -34,7 +33,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-    utils.make_dir(args.save_path)
+    utils.make_dir(args.data_path)
+    utils.make_dir(args.reference_path)
+    utils.make_dir(args.result_path)
 
     with torch.no_grad():
         netC2S = models.Color2Sketch(pretrained=True, checkpoint_path=args.sketch_model_path).to(device)
@@ -62,10 +63,11 @@ if __name__ == "__main__":
         edge = test_batch[0]
         reference = reference_batch[1].to(device)
         color_palette = reference_batch[2]
-        color_hexes = [utils.color_to_hex(color) for color in color_palette]
+        # color_hexes = [utils.color_to_hex(color) for color in color_palette]
         input_tensor = torch.cat([edge] + color_palette, dim=1).to(device)
         fake = netG(input_tensor)
         result = torch.cat([reference, edge, fake], dim=-1).cpu()
-
-    image = Image.fromarray(fake.cpu().detach().numpy())
-    image.save(os.path.join(args.result_path, "result.png"))
+        output = vutils.make_grid(result, nrow=1, padding=5, normalize=True).cpu().permute(1, 2, 0).numpy()
+        plt.imsave(arr=output, fname=os.path.join(args.save_path, "compare.png"))
+        image = utils.tensor_to_pillow_image(fake.squeeze(0))
+        image.save(os.path.join(args.result_path, "result.png"))
