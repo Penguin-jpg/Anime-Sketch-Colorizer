@@ -30,7 +30,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--num_clusters", type=int, default=9, help="Cluster of K-means to find color palette"
     )
-    parser.add_argument("--save_path", type=str, default="./results", help="Path to save result image")
+    parser.add_argument("--result_path", type=str, default="./results", help="Path to save result image")
     args = parser.parse_args()
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -68,4 +68,4 @@ if __name__ == "__main__":
         result = torch.cat([reference, edge, fake], dim=-1).cpu()
 
     image = Image.fromarray(fake.cpu().detach().numpy())
-    image.save(os.path.join(args.save_path, "result.png"))
+    image.save(os.path.join(args.result_path, "result.png"))
