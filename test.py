@@ -57,7 +57,7 @@ if __name__ == "__main__":
         edge = test_batch[0]
         reference = reference_batch[1].to(device)
         color_palette = reference_batch[2]
-        # color_hexes = [utils.color_to_hex(color) for color in color_palette]
+        color_hexes = [utils.color_to_hex(color.squeeze(0)) for color in color_palette]
         input_tensor = torch.cat([edge] + color_palette, dim=1).to(device)
         fake = netG(input_tensor)
         result = torch.cat([reference, edge, fake], dim=-1).cpu()
