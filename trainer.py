@@ -39,6 +39,7 @@ class Trainer:
         num_epochs=25,
         save_interval=1000,
         save_path="./checkpoint/sketch2color/sketch2color.pth",
+        only_store_generator=False,
         sketch_model_path="./ckeckpoint/color2sketch/color2sketch.pth",
         lr=2e-4,
         lambda1=100,
@@ -80,6 +81,7 @@ class Trainer:
         self.num_epochs = num_epochs
         self.save_interval = save_interval
         self.save_path = save_path
+        self.only_store_generator = only_store_generator
         self.lr = lr
         self.lambda1 = lambda1
         self.lambda2 = lambda2
@@ -105,16 +107,21 @@ class Trainer:
 
     def save(self, loss_list_D, loss_list_G, current_epoch):
         print(f"Saving epoch {current_epoch}!")
-        state = {
-            "epoch": current_epoch,
-            "netG": self.netG.state_dict(),
-            "netD": self.netD.state_dict(),
-            "loss_list_D": loss_list_D,
-            "loss_list_G": loss_list_G,
-            "optimizer_G": self.optimizer_G.state_dict(),
-            "optimizer_D": self.optimizer_D.state_dict(),
-        }
-        torch.save(state, self.save_path)
+        if not self.only_store_generator:
+            state = {
+                "epoch": current_epoch,
+                "netG": self.netG.state_dict(),
+                "netD": self.netD.state_dict(),
+                "loss_list_D": loss_list_D,
+                "loss_list_G": loss_list_G,
+                "optimizer_G": self.optimizer_G.state_dict(),
+                "optimizer_D": self.optimizer_D.state_dict(),
+            }
+        else:
+            state = {
+                "netD": self.netD.state_dict(),
+            }
+        torch.save(state, os.path.join(os.path.dirname(self.save_path), f"sketch2color_{current_epoch}.pth"))
         print(f"Epoch {current_epoch} saved!")
 
     def train(self):

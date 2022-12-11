@@ -26,6 +26,9 @@ if __name__ == "__main__":
         "--sketch_model_path", type=str, hhelp="Checkpoint path of trained Color2Sketch model"
     )
     parser.add_argument("--slice_image", action="store_true", help="Whether slice the training image or not")
+    parser.add_argument(
+        "--only_store_generator", action="store_true", help="Whether only store generator model weight"
+    )
     args = parser.parse_args()
 
     trainer = Trainer(
@@ -36,6 +39,7 @@ if __name__ == "__main__":
         args.num_epochs,
         args.save_interval,
         args.save_path,
+        args.only_store_generator,
         args.sketch_model_path,
     )
 
