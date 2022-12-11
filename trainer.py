@@ -119,7 +119,7 @@ class Trainer:
             }
         else:
             state = {
-                "netD": self.netD.state_dict(),
+                "netG": self.netG.state_dict(),
             }
         torch.save(state, os.path.join(os.path.dirname(self.save_path), f"sketch2color_{current_epoch}.pth"))
         print(f"Epoch {current_epoch} saved!")

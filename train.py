@@ -22,9 +22,7 @@ if __name__ == "__main__":
         default="./checkpoint/sketch2color/sketch2color.pth",
         help="Path to save checkpoint",
     )
-    parser.add_argument(
-        "--sketch_model_path", type=str, hhelp="Checkpoint path of trained Color2Sketch model"
-    )
+    parser.add_argument("--sketch_model_path", type=str, help="Checkpoint path of trained Color2Sketch model")
     parser.add_argument("--slice_image", action="store_true", help="Whether slice the training image or not")
     parser.add_argument(
         "--only_store_generator", action="store_true", help="Whether only store generator model weight"
