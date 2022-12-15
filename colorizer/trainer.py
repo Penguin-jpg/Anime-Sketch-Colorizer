@@ -3,9 +3,9 @@ from torch import nn
 import torchvision
 import opencv_transforms.transforms as TF
 
-import models
+from colorizer import models
 import utils
-import dataloader
+from colorizer import dataloader
 import time
 import os
 

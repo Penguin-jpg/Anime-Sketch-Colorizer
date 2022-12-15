@@ -1,9 +1,9 @@
 import argparse
 import torch
-import models
-import utils
+from colorizer import models
+from colorizer import utils
 import opencv_transforms.transforms as TF
-import dataloader
+from colorizer import dataloader
 import os
 import torchvision.utils as vutils
 import matplotlib.pyplot as plt

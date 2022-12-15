@@ -3,7 +3,7 @@ import torch
 import opencv_transforms.functional as FF
 from torchvision import datasets
 
-import utils
+from colorizer import utils
 
 
 class PairImageFolder(datasets.ImageFolder):

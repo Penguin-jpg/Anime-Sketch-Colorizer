@@ -1,5 +1,5 @@
 import argparse
-from trainer import Trainer
+from colorizer.trainer import Trainer
 
 # To ignore warning
 import warnings
