@@ -173,7 +173,7 @@ class AnvilImageFolder(datasets.ImageFolder):
     """
 
     def __init__(self, root, transform, sketch_net):
-        super(GetImageFolder, self).__init__(root, transform)
+        super(AnvilImageFolder, self).__init__(root, transform)
         self.sketch_net = sketch_net
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
