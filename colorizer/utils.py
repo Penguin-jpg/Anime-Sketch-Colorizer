@@ -3,6 +3,9 @@ import numpy as np
 import os
 import opencv_transforms.functional as FF
 import torchvision.transforms.functional as TF
+from PIL import Image
+import io
+from anvil import BlobMedia
 
 
 def color_cluster(img, nclusters=9):
@@ -75,3 +78,25 @@ def tensor_to_pillow_image(tensor):
     # denormalize to [0, 1]
     tensor = tensor.add(1).div(2)
     return TF.to_pil_image(tensor)
+
+
+def pillow_image_to_tensor(image):
+    return TF.to_tensor(image)
+
+
+def _preprocess(image):
+    return image.resize((512, 512), Image.LANCZOS)
+
+
+def get_image_from_bytes(image_bytes):
+    return _preprocess(Image.open(io.BytesIO(image_bytes))).convert("RGB")
+
+
+def _image_to_bytes(image):
+    output = io.BytesIO()
+    image.save(output, format="PNG")
+    return output.getvalue()
+
+
+def image_to_blob_media(image):
+    return BlobMedia("image/png", _image_to_bytes(image))
