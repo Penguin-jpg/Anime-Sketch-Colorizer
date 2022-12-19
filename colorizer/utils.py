@@ -63,8 +63,7 @@ def color_to_hex(color):
 
     # only need one rgb representation
     color = color[0][0]
-    color = color.add(1).div(2).mul(255)
-    return "#" + f"{int(color[0]):02x}".upper() * 3
+    return "#" + f"{int(color[0]):02x}{int(color[1]):02x}{int(color[2]):02x}".upper()
 
 
 def make_dir(path):
